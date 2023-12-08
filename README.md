@@ -34,8 +34,8 @@ $ npm install
 
 ## Enviroment
 
-Create a .env file based on .env.example
-use the access_token provided in the description of the test
+1 - Create a .env file based on .env.example <br/>
+2 - Fill te SHOPIFY_API_KEY variable use the access_token provided in the description of the test
 
 ## Running the app
 
