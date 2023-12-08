@@ -6,7 +6,7 @@ export class Product {
   id: string;
 
   @Column()
-  platform_id: string;
+  plataform_id: string;
 
   @Column()
   name: string;

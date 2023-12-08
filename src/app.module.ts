@@ -6,10 +6,11 @@ import { ProductsController } from './products/products.controller';
 import { ProductsService } from './products/products.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from './products/products.entity';
+const dbConfig = require("../ormconfig"); 
 @Module({
   imports: [
     HttpModule,
-    TypeOrmModule.forRoot(),
+    TypeOrmModule.forRoot(dbConfig),
     TypeOrmModule.forFeature([Product]),
   ],
   controllers: [
@@ -17,6 +18,7 @@ import { Product } from './products/products.entity';
     ProductsController],
   providers: [
     AppService,
-    ProductsService],
+    ProductsService
+  ],
 })
 export class AppModule {}

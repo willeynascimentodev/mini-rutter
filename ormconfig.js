@@ -1,6 +1,8 @@
-module.exports = {
+ORMConfig = {
     type: 'sqlite',
-    database: 'path/to/database.sqlite',
+    database: 'db/database.sqlite',
     entities: [__dirname + '/**/*.entity{.ts,.js}'],
     synchronize: true,
 };
+
+module.exports = ORMConfig;
