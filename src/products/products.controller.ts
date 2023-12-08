@@ -32,8 +32,8 @@ export class ProductsController {
                 nextUrl = response.headers.link != undefined ? response.headers.link : null
                 nextUrl = this.extractUrl(nextUrl);
                 
-                for(let i=0; i<response.data.products.length; i++) {
-                    let product = response.data.products[i];
+                for(let j=0; j<response.data.products.length; j++) {
+                    let product = response.data.products[j];
                     this.productsService.createProduct({
                         plataform_id: product.id,
                         name: product.title

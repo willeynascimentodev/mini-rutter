@@ -1,6 +1,6 @@
 // order.entity.ts
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany  } from 'typeorm';
+import { LineItem } from './line-item.entity';
 @Entity()
 export class Order {
   @PrimaryGeneratedColumn('uuid')
@@ -8,5 +8,8 @@ export class Order {
 
   @Column()
   plataform_id: string;
+
+  @OneToMany(() => LineItem, (lineItem) => lineItem.order, { cascade: true })
+  line_items: LineItem[];
 
 }

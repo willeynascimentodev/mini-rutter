@@ -10,12 +10,13 @@ import { Order } from './orders/order.entity';
 import { OrdersController } from './orders/orders.controller';
 import { OrdersService } from './orders/orders.service';
 import { UtilsService } from './utils/utils.service';
+import { LineItem } from './orders/line-item.entity';
 const dbConfig = require("../ormconfig"); 
 @Module({
   imports: [
     HttpModule,
     TypeOrmModule.forRoot(dbConfig),
-    TypeOrmModule.forFeature([Product, Order]),
+    TypeOrmModule.forFeature([Product, Order, LineItem]),
   ],
   controllers: [
     AppController, 
