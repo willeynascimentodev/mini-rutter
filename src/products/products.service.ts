@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Product } from './products.entity';
 import { ProductInterface } from './product.interface';
-
+import * as dotenv from 'dotenv';
 @Injectable()
 export class ProductsService {
     constructor(
@@ -14,9 +14,9 @@ export class ProductsService {
     ) {}
 
     async fetchData(url: string) {
-
+        dotenv.config();
         const headers = {
-            'X-Shopify-Access-Token': 'shpua_b1c9a97a8a3a33ee4a1aa0600b160cab',
+            'X-Shopify-Access-Token': process.env.SHOPIFY_API_KEY,
           };
         return await this.httpService.get(url, {headers}).toPromise();
     }
