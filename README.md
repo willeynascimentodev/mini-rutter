@@ -36,7 +36,6 @@ $ npm install
 
 Create a .env file based on .env.example
 
-
 ## Running the app
 
 ```bash
@@ -49,6 +48,18 @@ $ npm run start:dev
 # production mode
 $ npm run start:prod
 ```
+
+## Endpoints
+
+Fetch Orders: http://localhost:3000/orders/fetch
+Get Orders: http://localhost:3000/orders
+Fetch Products: http://localhost:3000/products/fetch
+Get Products: http://localhost:3000/products?page=1
+
+## Notes
+
+1 - In a production enviroment, we can set a CRON to run the fetch endpoint
+2 - The access_key is exposed in the .env.example file only to make it easy test the app, in a real world problem, It would be hidden.
 
 ## Test
 
