@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Product } from './products.entity';
 import { ProductInterface } from './product.interface';
+import { LineItem } from 'src/orders/line-item.entity';
 import * as dotenv from 'dotenv';
 @Injectable()
 export class ProductsService {
@@ -11,6 +12,8 @@ export class ProductsService {
         private readonly httpService: HttpService,
         @InjectRepository(Product)
         private readonly productRepository: Repository<Product>,
+        @InjectRepository(LineItem)
+        private readonly lineItemRepository: Repository<LineItem>,
     ) {}
 
     async fetchData(url: string) {
@@ -33,6 +36,16 @@ export class ProductsService {
         return this.productRepository.createQueryBuilder('products')
         .select('products.plataform_id')
         .getRawMany();
+    }
+
+    async findByOrderId(id:string) {
+        const orders = await this.lineItemRepository.query(
+            `SELECT li.product_id FROM line_item as li
+            INNER JOIN product as p ON p.plataform_id = li.product_id
+            WHERE li.orderId = ?`, [id]
+          );
+
+        return orders;
     }
 
     async paginateProducts(offset: number, perPage: number): Promise<Product[]> {

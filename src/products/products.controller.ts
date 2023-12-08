@@ -1,11 +1,13 @@
 import { Controller, Get, Query  } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { off } from 'process';
+import { UtilsService } from 'src/utils/utils.service';
 
 @Controller('products')
 export class ProductsController {
     constructor(
-        private readonly productsService: ProductsService
+        private readonly productsService: ProductsService,
+        private readonly utilsService: UtilsService
     ) {}
 
     private limit: number = 50; 
@@ -30,7 +32,7 @@ export class ProductsController {
                 
                 const response = await this.productsService.fetchData(nextUrl);
                 nextUrl = response.headers.link != undefined ? response.headers.link : null
-                nextUrl = this.extractUrl(nextUrl);
+                nextUrl = this.utilsService.extractUrl(nextUrl);
                 
                 for(let j=0; j<response.data.products.length; j++) {
                     let product = response.data.products[j];
@@ -57,18 +59,5 @@ export class ProductsController {
         let currentPage = page ? page : 1;
         let offset = currentPage == 1 ? 0 : (page * this.perPage) - this.perPage
         return await this.productsService.paginateProducts(offset, this.perPage);
-    }
-
-    extractUrl(field: string) {
-        const regex = /<([^>]*)>; rel="next"/;
-        const match = regex.exec(field);
-
-        // A URL estará no grupo de captura (índice 1)
-        if (match && match[1]) {
-            const nextUrl = match[1];
-            return nextUrl;
-        } else {
-            return null;
-        }
     }
 }

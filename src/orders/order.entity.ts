@@ -2,14 +2,14 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany  } from 'typeorm';
 import { LineItem } from './line-item.entity';
 @Entity()
-export class Order {
+export class Orders {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
   plataform_id: string;
 
-  @OneToMany(() => LineItem, (lineItem) => lineItem.order, { cascade: true })
-  line_items: LineItem[];
+  @OneToMany(() => LineItem, (lineItem) => lineItem.orders, { cascade: true })
+  line_items: any;
 
 }

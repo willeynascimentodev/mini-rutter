@@ -3,7 +3,7 @@ import { HttpService }  from '@nestjs/axios'
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, QueryRunner } from 'typeorm';
 import { OrderInterface } from './order.interface';
-import { Order } from './order.entity';
+import { Orders } from './order.entity';
 import { LineItem } from './line-item.entity';
 import { ProductsService } from 'src/products/products.service';
 import * as dotenv from 'dotenv';
@@ -12,8 +12,8 @@ import * as dotenv from 'dotenv';
 export class OrdersService {
     constructor(
         private readonly httpService: HttpService,
-        @InjectRepository(Order)
-        private readonly orderRepository: Repository<Order>,
+        @InjectRepository(Orders)
+        private readonly orderRepository: Repository<Orders>,
         @InjectRepository(LineItem)
         private readonly lineItemRepository: Repository<LineItem>,
         private productService: ProductsService
@@ -27,18 +27,23 @@ export class OrdersService {
         return await this.httpService.get(url, {headers}).toPromise();
     }
 
-    async createOrder(order: OrderInterface): Promise<Order> {
-        
-        const orderSaved = this.orderRepository.create({ plataform_id: order.plataform_id });
-        
-        order.lineItems.map(lineItemData =>
-            this.lineItemRepository.create({ product_id: lineItemData.product_id, order: order })
-        );
-
-        return this.orderRepository.save(order);
+    async createOrder(order: OrderInterface): Promise<Orders> {
+        const orderSaved = await this.orderRepository.save(order);
+        for(let i=0; i<order.lineItems.length; i++) {
+            let item = order.lineItems[i];
+            
+            if(item?.product_id) {
+                this.lineItemRepository.save({
+                    product_id: item.product_id,
+                    orderId: orderSaved.id,
+                    order: orderSaved
+                });
+            }
+        }
+        return orderSaved;
     }
 
-    async paginateOrders(offset: number, perPage: number): Promise<Order[]> {
+    async paginateOrders(offset: number, perPage: number): Promise<Orders[]> {
         let products = await this.productService.findArrayProducts();
         
         let productsIds = [];
@@ -47,16 +52,21 @@ export class OrdersService {
         }
 
         const orders = await this.orderRepository
-        .createQueryBuilder('order')
-        .innerJoinAndSelect('order.line_items', 'line_item') 
-        .where('line_item.product_id IN (:...productIds)', { productIds: productsIds })
-        .offset(offset)
-        .limit(perPage)
+        .createQueryBuilder('orders')
         .getMany();
-        return orders;
+
+        let ordersRelated = [];
+        for(let i=0; i<orders.length; i++) {
+            orders[i].line_items = await this.productService.findByOrderId(orders[i].id);
+            if(orders[i].line_items.length > 0) {
+                ordersRelated.push(orders[i]);
+            }
+        }
+
+        return ordersRelated;
     }
 
-    async findAllOrders(): Promise<Order[]> {
+    async findAllOrders(): Promise<Orders[]> {
         return this.orderRepository.createQueryBuilder('order').getMany();
     }
 }

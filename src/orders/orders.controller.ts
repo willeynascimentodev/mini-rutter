@@ -25,7 +25,6 @@ export class OrdersController {
                 loops = 0;
             }
 
-
             for(let i=0; i<loops; i++) {
                 
                 const response = await this.orderService.fetchData(nextUrl);

@@ -1,6 +1,6 @@
 // line-item.entity.ts
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
-import { Order } from './order.entity';
+import { Orders } from './order.entity';
 
 @Entity()
 export class LineItem {
@@ -8,8 +8,11 @@ export class LineItem {
   id: string;
 
   @Column()
-  product_id: string | null;
+  product_id: string;
 
-  @ManyToOne(() => Order, (order) => order.line_items)
-  order: Order;
+  @Column()
+  orderId: string;
+
+  @ManyToOne(() => Orders, (order) => order.line_items)
+  orders: Orders;
 }

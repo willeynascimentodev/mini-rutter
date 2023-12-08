@@ -6,7 +6,7 @@ import { ProductsController } from './products/products.controller';
 import { ProductsService } from './products/products.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from './products/products.entity';
-import { Order } from './orders/order.entity';
+import { Orders } from './orders/order.entity';
 import { OrdersController } from './orders/orders.controller';
 import { OrdersService } from './orders/orders.service';
 import { UtilsService } from './utils/utils.service';
@@ -16,7 +16,7 @@ const dbConfig = require("../ormconfig");
   imports: [
     HttpModule,
     TypeOrmModule.forRoot(dbConfig),
-    TypeOrmModule.forFeature([Product, Order, LineItem]),
+    TypeOrmModule.forFeature([Product, Orders, LineItem]),
   ],
   controllers: [
     AppController, 
