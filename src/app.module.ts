@@ -1,11 +1,22 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ShopifyControllerController } from './shopify-controller/shopify-controller.controller';
-
+import { HttpModule } from '@nestjs/axios';
+import { ProductsController } from './products/products.controller';
+import { ProductsService } from './products/products.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Product } from './products/products.entity';
 @Module({
-  imports: [],
-  controllers: [AppController, ShopifyControllerController],
-  providers: [AppService],
+  imports: [
+    HttpModule,
+    TypeOrmModule.forRoot(),
+    TypeOrmModule.forFeature([Product]),
+  ],
+  controllers: [
+    AppController, 
+    ProductsController],
+  providers: [
+    AppService,
+    ProductsService],
 })
 export class AppModule {}
