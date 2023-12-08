@@ -25,7 +25,11 @@ export class ProductsService {
         return this.productRepository.save(product);
     }
 
-    async findAllProducts(offset: number, perPage: number): Promise<Product[]> {
-        return this.productRepository.createQueryBuilder('url').offset(offset).limit(perPage).getMany();
+    async findAllProducts(): Promise<Product[]> {
+        return this.productRepository.createQueryBuilder('products').getMany();
+    }
+
+    async paginateProducts(offset: number, perPage: number): Promise<Product[]> {
+        return this.productRepository.createQueryBuilder('products').offset(offset).limit(perPage).getMany();
     }
 }

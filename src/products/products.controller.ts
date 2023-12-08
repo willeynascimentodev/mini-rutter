@@ -9,7 +9,7 @@ export class ProductsController {
     ) {}
 
     private limit: number = 50; 
-    private totalProduct: number = 64; 
+    private totalProduct: number = 1000000; 
     private apiUrl: string = "https://rutterinterview.myshopify.com/admin/api/2023-10/products.json";
     private perPage: number = 10;
 
@@ -19,7 +19,7 @@ export class ProductsController {
             let loops = (this.totalProduct)/this.limit;
             let nextUrl = `${this.apiUrl}?limit=${this.limit}`;
 
-            let productsStored = await this.productsService.findAllProducts(1, 10);
+            let productsStored = await this.productsService.findAllProducts();
 
             
             if(productsStored.length == this.totalProduct) {
@@ -55,8 +55,8 @@ export class ProductsController {
     @Get('') 
     async getProducts(@Query('page') page: number) {
         let currentPage = page ? page : 1;
-        let offset = page == 1 ? 0 : (page * this.perPage) - this.perPage
-        return await this.productsService.findAllProducts(offset, this.perPage);
+        let offset = currentPage == 1 ? 0 : (page * this.perPage) - this.perPage
+        return await this.productsService.paginateProducts(offset, this.perPage);
     }
 
     extractUrl(field: string) {
